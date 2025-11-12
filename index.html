@@ -9,8 +9,7 @@
 <style>
   :root{
     --bg1:#0b0710; --bg2:#170a22; --bg3:#240b34;
-    --pink:#ff6ea6; --pink2:#ff93c4; --neon:#ff3b7a; --accent:#ffd7f0;
-    --line: rgba(255,255,255,0.08);
+    --pink:#ff6ea6; --pink2:#ff93c4;
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   }
   *{box-sizing:border-box}
@@ -19,68 +18,54 @@
     radial-gradient(900px 500px at 85% 80%, #8ec9ff12, transparent),
     linear-gradient(180deg,var(--bg1),var(--bg2) 50%, var(--bg3));}
 
-  /* full-screen stage */
-  .stage{position:fixed;inset:0;display:grid;place-items:center}
+  /* Candy drip polish (mask removes hard pink bar) */
+  .drips, .drips.bottom{
+    opacity:.72;
+    mix-blend-mode:screen;
+    -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1)0%,rgba(0,0,0,1)58%,rgba(0,0,0,0)100%);
+            mask-image:linear-gradient(to bottom,rgba(0,0,0,1)0%,rgba(0,0,0,1)58%,rgba(0,0,0,0)100%);
+  }
+  .drips.bottom{
+    transform:scaleY(-1);
+    -webkit-mask-image:linear-gradient(to top,rgba(0,0,0,1)0%,rgba(0,0,0,1)58%,rgba(0,0,0,0)100%);
+            mask-image:linear-gradient(to top,rgba(0,0,0,1)0%,rgba(0,0,0,1)58%,rgba(0,0,0,0)100%);
+  }
+  .drips{top:-6px;height:120px;}
 
-  /* background particles canvas */
+  /* stage */
   #bg{position:fixed;inset:0;z-index:0;pointer-events:none}
-
-  /* top/bottom animated drips to match app.html */
-  .drips{position:fixed;left:0;right:0;top:0;height:140px;z-index:3;pointer-events:none;opacity:.96}
-  .drips.bottom{top:auto;bottom:0;transform:scaleY(-1);opacity:.85}
-
-  /* soft orbs (depth) */
-  .orbs{position:fixed;inset:0;z-index:0;pointer-events:none}
-  .orb{position:absolute;border-radius:50%;filter:blur(84px);opacity:.14}
-  .orb.p1{left:6%;top:8%;width:520px;height:520px;background:radial-gradient(circle,#ff6ea6,#ffd6ef)}
-  .orb.p2{right:8%;bottom:8%;width:360px;height:360px;background:radial-gradient(circle,#8ec9ff,#dff3ff);opacity:.10}
-
-  /* card */
+  .stage{position:fixed;inset:0;display:grid;place-items:center;z-index:1}
   .card{position:relative;z-index:2;width:min(780px,92vw);border-radius:20px;overflow:hidden;
-    border:1px solid var(--line);
-    background:linear-gradient(180deg,#ffffff08,#00000010);
-    box-shadow:0 30px 80px rgba(0,0,0,0.35), inset 0 -12px 24px rgba(0,0,0,0.25);
-    animation:popIn .6s cubic-bezier(.2,.9,.3,1) both}
-  @keyframes popIn{from{transform:translateY(12px) scale(.98);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+    border:1px solid rgba(255,255,255,0.08);
+    background:linear-gradient(180deg,#ffffff0a,#00000010);
+    box-shadow:0 30px 80px rgba(0,0,0,0.35), inset 0 -12px 24px rgba(0,0,0,0.25);}
 
   .hero{position:relative;height:360px}
-  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:drop-shadow(0 30px 50px rgba(0,0,0,.6));
-    transform-origin:center;animation:float 8s ease-in-out infinite}
-  @keyframes float{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.01)}100%{transform:translateY(0) scale(1)}}
-
+  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:drop-shadow(0 30px 50px rgba(0,0,0,.6))}
   .gloss{position:absolute;inset:0;mix-blend-mode:screen;pointer-events:none}
   .gloss:before{content:"";position:absolute;left:-30%;top:-50%;width:160%;height:160%;
-    background:radial-gradient(600px 300px at 20% 10%, #ffffff16, transparent);transform:rotate(-18deg);
-    animation:glossMove 3.2s ease-in-out infinite}
+    background:radial-gradient(600px 300px at 20% 10%, #ffffff16, transparent);
+    transform:rotate(-18deg);animation:glossMove 3.2s ease-in-out infinite}
   @keyframes glossMove{0%,100%{transform:translateX(0) rotate(-18deg)}50%{transform:translateX(4%) rotate(-18deg)}}
 
-  .meta{display:flex;align-items:center;gap:12px;padding:14px}
-  .title{font-weight:1000;letter-spacing:.2px}
-  .bar{flex:1;height:10px;border-radius:999px;background:#ffffff10;border:1px solid var(--line);overflow:hidden}
-  .bar>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--pink),var(--pink2));
-    box-shadow:0 0 24px #ff6ea673 inset, 0 6px 24px #ff6ea644}
-  .pill{padding:6px 10px;border-radius:10px;border:1px solid var(--line)}
-  .skip{margin-left:6px;background:transparent;border:1px solid var(--line);color:#fff;border-radius:10px;padding:8px 12px;cursor:pointer}
-  .hint{padding:0 14px 16px;color:#e9d6e4;font-size:13px}
-
-  /* floating emoji candies over the hero */
-  .candy{position:absolute;inset:auto; width:48px;height:48px;border-radius:50%;
+  .candy{position:absolute; width:48px;height:48px;border-radius:50%;
     display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;
     background:linear-gradient(180deg,#fff6,#ff9ac8); color:#2b0016;
-    border:1px solid rgba(255,255,255,0.08);
-    box-shadow:0 12px 30px rgba(255,80,150,0.15);
-    animation:floaty var(--dur,6s) ease-in-out infinite;
-    user-select:none;z-index:2}
+    border:1px solid rgba(255,255,255,0.08); box-shadow:0 12px 30px rgba(255,80,150,0.15);
+    animation:floaty var(--dur,6s) ease-in-out infinite}
   @keyframes floaty{0%{transform:translateY(0) translateX(0) rotate(0)}50%{transform:translateY(-40px) translateX(16px) rotate(8deg)}100%{transform:translateY(0) translateX(0) rotate(0)}}
 
-  /* fade out when redirecting */
+  .meta{display:flex;align-items:center;gap:12px;padding:14px}
+  .bar{flex:1;height:10px;border-radius:999px;background:#ffffff10;border:1px solid rgba(255,255,255,0.08);overflow:hidden}
+  .bar>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--pink),var(--pink2));box-shadow:0 0 24px #ff6ea673 inset}
+  .skip{background:transparent;border:1px solid rgba(255,255,255,0.08);color:#fff;border-radius:10px;padding:8px 12px;cursor:pointer}
   .fadeOut{opacity:0;transition:opacity .35s ease}
 </style>
 </head>
 <body>
 <canvas id="bg"></canvas>
 
-<!-- matching drips (same shapes as app.html) -->
+<!-- Animated drips -->
 <svg class="drips" viewBox="0 0 1200 140" preserveAspectRatio="none" aria-hidden="true">
   <defs><linearGradient id="gTop" x1="0" x2="1"><stop offset="0" stop-color="#ff6ea6"/><stop offset="1" stop-color="#ff93c4"/></linearGradient></defs>
   <path d="M0,30 C80,90 140,20 220,44 C300,68 360,24 420,40 C480,56 540,18 620,48 C700,78 780,36 860,46 C940,56 1000,44 1080,66 C1160,88 1200,30 1200,30 L1200,140 L0,140 Z" fill="url(#gTop)" opacity="0.95">
@@ -89,50 +74,32 @@
       M0,30 C80,90 140,20 220,44 C300,68 360,24 420,40 C480,56 540,18 620,48 C700,78 780,36 860,46 C940,56 1000,44 1080,66 C1160,88 1200,30 1200,30 L1200,140 L0,140 Z;
       M0,26 C80,74 140,30 220,58 C300,92 360,8 420,24 C480,40 540,22 620,62 C700,102 780,44 860,58 C940,70 1000,50 1080,86 C1160,110 1200,26 1200,26 L1200,140 L0,140 Z;
       M0,34 C80,98 140,16 220,34 C300,52 360,28 420,52 C480,76 540,20 620,44 C700,68 780,30 860,40 C940,50 1000,42 1080,60 C1160,78 1200,34 1200,34 L1200,140 L0,140 Z
-      "/>
+      " />
   </path>
 </svg>
 <svg class="drips bottom" viewBox="0 0 1200 140" preserveAspectRatio="none" aria-hidden="true">
   <use href=".drips path"/>
 </svg>
 
-<div class="orbs" aria-hidden="true"><div class="orb p1"></div><div class="orb p2"></div></div>
-
 <div class="stage">
-  <div class="card" id="card">
-    <div class="hero">
+  <div class="card">
+    <div class="hero" aria-label="Edibles intro graphic">
       <img src="edibles-hero.jpg" alt="$Edibles hero">
       <div class="gloss"></div>
-      <!-- emoji candies floating on top -->
       <div class="candy" style="left:12px; top:12px; --dur:7s">🍬</div>
       <div class="candy" style="right:14px; top:20px; --dur:6.2s">🍭</div>
       <div class="candy" style="left:20px; bottom:18px; --dur:7.6s">🍫</div>
       <div class="candy" style="right:22px; bottom:12px; --dur:6.4s">🍡</div>
     </div>
     <div class="meta">
-      <div class="title">Tasting in progress…</div>
       <div class="bar" aria-label="Loading progress"><i id="fill"></i></div>
-      <button class="skip" id="skip" title="Skip intro (Enter)">Skip</button>
+      <button class="skip" id="skip">Skip</button>
     </div>
-    <div class="hint">Press <strong>Enter</strong> or click Skip to jump in.</div>
   </div>
 </div>
 
-<noscript>
-  <meta http-equiv="refresh" content="2;url=app.html">
-</noscript>
-
 <script>
-/* ========================
-   CONFIG
-======================== */
-const TARGET_PAGE = 'app.html';    // main site
-const DURATION_MS = 3000;          // splash length
-const BYPASS_PARAM = 'skip';       // ?skip to bypass
-
-/* ========================
-   Background particles (match app)
-======================== */
+/* ===== Candy particles (background) ===== */
 const canvas = document.getElementById('bg');
 const ctx = canvas.getContext('2d');
 let W,H, DPR = Math.min(2, window.devicePixelRatio || 1);
@@ -144,19 +111,29 @@ const MAX = 70; const parts = Array.from({length:MAX}, () => ({x:rand(0,W), y:ra
 let mx=-9999,my=-9999; addEventListener('mousemove',e=>{mx=e.clientX*DPR; my=e.clientY*DPR}); addEventListener('mouseleave',()=>{mx=my=-9999});
 (function step(){ ctx.clearRect(0,0,W,H); for(const p of parts){ const dx=mx-p.x, dy=my-p.y, d=Math.hypot(dx,dy)||1; if(d<220*DPR){ p.vx+=dx/d*0.01; p.vy+=dy/d*0.01; } p.x+=p.vx; p.y+=p.vy; p.vx*=0.986; p.vy=p.vy*0.986+0.018; if(p.x<-40)p.x=W+40; if(p.x>W+40)p.x=-40; if(p.y>H+40){p.y=-20; p.vy*=0.2} const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*1.4); g.addColorStop(0,'rgba(255,255,255,'+Math.min(0.9,p.a)+')'); g.addColorStop(0.35,p.c+'cc'); g.addColorStop(1,'rgba(255,255,255,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p.x,p.y,p.r*1.6,0,Math.PI*2); ctx.fill(); } requestAnimationFrame(step); })();
 
-/* ========================
-   Progress + redirect
-======================== */
-const fill = document.getElementById('fill');
-const skip = document.getElementById('skip');
-function hasParam(name){ return new URLSearchParams(location.search).has(name); }
-function go(){ document.body.classList.add('fadeOut'); setTimeout(()=>{ location.href = TARGET_PAGE; }, 350); }
-let start = performance.now();
-function tick(t){ const k = Math.min(1, (t-start)/DURATION_MS); fill.style.width = (k*100).toFixed(1)+'%'; if(k<1) requestAnimationFrame(tick); else go(); }
-skip.addEventListener('click', go); window.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' ') go(); });
-if(hasParam(BYPASS_PARAM)) location.replace(TARGET_PAGE); else requestAnimationFrame(tick);
+/* ===== Robust redirect (works on GitHub Pages) ===== */
+const basePath = location.pathname.endsWith("/") ? location.pathname : location.pathname.replace(/[^/]*$/, ""); // "/repo/"
+const TARGET_PAGE = basePath + "app.html";
+const DURATION_MS = 3000;
+const fill = document.getElementById("fill");
+const skip = document.getElementById("skip");
 
-/* Prefetch app for snappy handoff */
+function go(){
+  document.body.classList.add("fadeOut");
+  setTimeout(()=>location.replace(TARGET_PAGE),350); // replace avoids back-button loop
+}
+skip.addEventListener("click", go);
+window.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ go(); } });
+
+let start = performance.now();
+function tick(t){
+  const k = Math.min(1, (t - start) / DURATION_MS);
+  fill.style.width = (k * 100).toFixed(1) + "%";
+  if (k < 1) requestAnimationFrame(tick); else go();
+}
+requestAnimationFrame(tick);
+
+/* Prefetch */
 const link = document.createElement('link'); link.rel='prefetch'; link.href=TARGET_PAGE; document.head.appendChild(link);
 </script>
 </body>
