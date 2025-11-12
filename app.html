@@ -3,128 +3,173 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>$Edibles — Taste the Token. Trip the Market.</title>
+<title>$Edibles — Candyverse</title>
 <link rel="icon" href="data:," />
 <style>
   :root{
-    --bg:#071026;
-    --pink:#ff6ea6;
-    --glass: rgba(255,255,255,0.06);
-    --glass-2: rgba(255,255,255,0.08);
-    --accent:#ff9ab3;
-    --neon:#ff3b7a;
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    --bg1:#0b0710; --bg2:#170a22; --bg3:#240b34;
+    --pink:#ff6ea6; --pink2:#ff93c4; --neon:#ff3b7a; --accent:#ffd7f0;
+    --glass: rgba(255,255,255,0.06); --line: rgba(255,255,255,0.08);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   }
-  html,body{height:100%;margin:0;background:linear-gradient(180deg,#041022 0%, #08142a 60%);color:#fff;overflow-x:hidden;}
-  .wrap{max-width:1200px;margin:0 auto;padding:28px;}
-  header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 0}
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;color:#fff;overflow-x:hidden;background:
+    radial-gradient(1200px 600px at 15% 10%, #ff6ea610, transparent),
+    radial-gradient(900px 500px at 85% 80%, #8ec9ff12, transparent),
+    linear-gradient(180deg,var(--bg1),var(--bg2) 50%, var(--bg3));}
+
+  /* layout */
+  .wrap{max-width:1200px;margin:0 auto;padding:28px;position:relative;z-index:2}
+  header{display:flex;align-items:center;justify-content:space-between;gap:14px}
   .brand{display:flex;align-items:center;gap:12px}
-  .logo{
-    width:120px;height:56px;background:linear-gradient(90deg,var(--pink),var(--accent));
-    border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(255,105,160,0.12), inset 0 -6px 18px rgba(0,0,0,0.25);
-    font-weight:800;font-size:20px;color:#2b0022;letter-spacing:1px;
-  }
-  nav{display:flex;gap:12px;align-items:center}
-  nav a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px;background:transparent}
+  .logo{padding:10px 16px;border-radius:14px;font-weight:900;letter-spacing:.5px;color:#260019;
+    background:linear-gradient(90deg,var(--pink),var(--pink2));
+    box-shadow:0 14px 44px #ff6ea622, inset 0 -8px 20px #00000044}
+  nav{display:flex;gap:10px}
+  nav a{padding:8px 12px;border-radius:10px;border:1px solid var(--line);color:#fff;text-decoration:none}
   nav a:hover{background:var(--glass)}
-  .hero{
-    margin-top:12px;border-radius:16px;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
-    position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.03);
-  }
-  .hero-inner{display:grid;grid-template-columns: 1fr 420px;gap:28px;align-items:center}
-  .headline{font-size:34px;line-height:1.02;margin:0 0 12px;font-weight:800;text-shadow:0 6px 36px rgba(255,105,160,0.06);}
-  .sub{color:rgba(255,255,255,0.85);margin-bottom:18px}
-  .cta{display:flex;gap:12px;align-items:center}
-  .btn{background:linear-gradient(90deg,var(--neon),#ffa2c9);padding:12px 18px;border-radius:12px;border:none;color:#200014;font-weight:700;cursor:pointer;box-shadow:0 8px 30px rgba(255,59,122,0.12)}
-  .ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff;padding:10px 14px;border-radius:12px}
-  .hero-art{width:100%;height:320px;border-radius:12px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}
-  .hero-art img{width:100%;height:100%;object-fit:cover;display:block;filter:drop-shadow(0 22px 40px rgba(0,0,0,0.6));transform-origin:center;transition:transform .6s cubic-bezier(.2,.9,.3,1)}
-  .hero-art .bubbles{position:absolute;inset:0;pointer-events:none}
-  .token-panel{background:linear-gradient(0deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.03)}
-  .token-price{font-size:28px;font-weight:800}
-  .meta{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
-  .pill{background:var(--glass);padding:6px 10px;border-radius:10px;font-weight:600}
-  section{margin-top:28px;padding:22px;border-radius:12px}
-  .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+
+  /* neon drips */
+  .drips{position:fixed;left:0;right:0;top:0;height:140px;z-index:3;pointer-events:none;opacity:.96}
+  .drips.bottom{top:auto;bottom:0;transform:scaleY(-1);opacity:.8}
+
+  /* floating bubble orbs for depth */
+  .orbs{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.14}
+  .orb.p1{left:6%;top:8%;width:520px;height:520px;background:radial-gradient(circle,#ff6ea6,#ffd6ef)}
+  .orb.p2{right:8%;bottom:8%;width:360px;height:360px;background:radial-gradient(circle,#8ec9ff,#dff3ff);opacity:.10}
+
+  /* hero */
+  .hero{margin-top:18px;border-radius:20px;overflow:hidden;position:relative;border:1px solid var(--line);
+    background:linear-gradient(180deg,#ffffff08,#00000010)}
+  .hero-grid{display:grid;grid-template-columns:1fr 440px;gap:26px;align-items:center;padding:26px}
+  .headline{font-size:42px;line-height:1.02;margin:0 0 10px;font-weight:1000;letter-spacing:-.02em;
+    text-shadow:0 14px 60px #ff6ea61f}
+  .sub{color:#f8eaf2cc;margin:0 0 16px;font-weight:600}
+  .btn{background:linear-gradient(90deg,var(--neon),#ffa2c9);padding:12px 18px;border-radius:14px;border:none;color:#1f0013;font-weight:900;cursor:pointer;
+    box-shadow:0 18px 40px #ff3b7a2a;transition:transform .15s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .ghost{background:transparent;border:1px solid var(--line);color:#fff;padding:10px 14px;border-radius:12px}
+  .cta{display:flex;gap:10px;flex-wrap:wrap}
+
+  .art{position:relative;height:360px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:drop-shadow(0 30px 50px rgba(0,0,0,.6));
+    transform-origin:center;transition:transform .7s cubic-bezier(.2,.9,.3,1)}
+  .gloss{position:absolute;inset:0;mix-blend-mode:screen;pointer-events:none}
+  .gloss:before{content:"";position:absolute;left:-30%;top:-50%;width:160%;height:160%;
+    background:radial-gradient(600px 300px at 20% 10%, #ffffff16, transparent);transform:rotate(-18deg);
+    animation:glossMove 3.3s ease-in-out infinite}
+  @keyframes glossMove{0%,100%{transform:translateX(0) rotate(-18deg)}50%{transform:translateX(4%) rotate(-18deg)}}
+
+  /* token cards */
+  section{margin-top:22px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+  .card{background:#ffffff08;border:1px solid var(--line);border-radius:14px;padding:14px}
   table{width:100%;border-collapse:collapse}
-  th,td{padding:10px;text-align:left;border-bottom:1px dashed rgba(255,255,255,0.03)}
-  .game-stage{height:420px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));border-radius:12px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
-  .floating-candy{position:absolute;width:56px;height:56px;background:radial-gradient(circle at 30% 30%, #fff8 0%, #fff0 40%), linear-gradient(180deg,#ff8fb8,#ff4a90);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#290014;font-weight:900;font-size:18px;cursor:pointer;box-shadow:0 8px 28px rgba(255,100,160,0.12)}
-  .scoreboard{position:absolute;right:14px;top:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);width:190px}
-  .leader{margin-top:10px;font-size:13px;color:#ddd}
-  footer{margin-top:30px;padding:16px;border-radius:12px;background:transparent;display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .small{font-size:13px;color:#ccc}
-  @media (max-width:900px){
-    .hero-inner{grid-template-columns:1fr}
-    .hero-art{height:240px}
-  }
+  th,td{padding:8px;border-bottom:1px dashed #ffffff14;text-align:left}
+  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#00000030;margin-right:6px;font-weight:700}
+
+  /* game */
+  .stage{height:420px;border-radius:14px;border:1px solid var(--line);position:relative;overflow:hidden;
+    background:linear-gradient(180deg,#ffffff08,#00000010)}
+  .hud{position:absolute;right:12px;top:12px;background:#ffffff10;border:1px solid var(--line);border-radius:12px;padding:10px;width:200px}
+
+  footer{margin:26px 0 8px;color:#ddd;display:flex;align-items:center;justify-content:space-between}
+
+  /* cursor sparkle */
+  .spark{position:fixed;width:10px;height:10px;border-radius:50%;pointer-events:none;z-index:5;mix-blend-mode:screen;
+    background:radial-gradient(circle,#fff,#fff0)}
+
+  /* responsive */
+  @media (max-width:960px){ .hero-grid{grid-template-columns:1fr} .art{height:260px} .headline{font-size:30px} }
 </style>
 </head>
 <body>
+
+<!-- background candy canvas (super lightweight particles) -->
+<canvas id="bgCandies" style="position:fixed;inset:0;z-index:1;pointer-events:none"></canvas>
+
+<!-- neon drips top/bottom -->
+<svg class="drips" viewBox="0 0 1200 140" preserveAspectRatio="none" aria-hidden="true">
+  <defs><linearGradient id="gTop" x1="0" x2="1"><stop offset="0" stop-color="#ff6ea6"/><stop offset="1" stop-color="#ff93c4"/></linearGradient></defs>
+  <path d="M0,30 C80,90 140,20 220,44 C300,68 360,24 420,40 C480,56 540,18 620,48 C700,78 780,36 860,46 C940,56 1000,44 1080,66 C1160,88 1200,30 1200,30 L1200,140 L0,140 Z" fill="url(#gTop)" opacity="0.95">
+    <animate attributeName="d" dur="6.4s" repeatCount="indefinite"
+      values="
+      M0,30 C80,90 140,20 220,44 C300,68 360,24 420,40 C480,56 540,18 620,48 C700,78 780,36 860,46 C940,56 1000,44 1080,66 C1160,88 1200,30 1200,30 L1200,140 L0,140 Z;
+      M0,26 C80,74 140,30 220,58 C300,92 360,8 420,24 C480,40 540,22 620,62 C700,102 780,44 860,58 C940,70 1000,50 1080,86 C1160,110 1200,26 1200,26 L1200,140 L0,140 Z;
+      M0,34 C80,98 140,16 220,34 C300,52 360,28 420,52 C480,76 540,20 620,44 C700,68 780,30 860,40 C940,50 1000,42 1080,60 C1160,78 1200,34 1200,34 L1200,140 L0,140 Z
+      "/>
+  </path>
+</svg>
+<svg class="drips bottom" viewBox="0 0 1200 140" preserveAspectRatio="none" aria-hidden="true">
+  <use href=".drips path"/>
+</svg>
+
+<div class="orbs" aria-hidden="true"><div class="orb p1"></div><div class="orb p2"></div></div>
+
 <div class="wrap">
   <header>
     <div class="brand">
       <div class="logo">$EDIBLES</div>
-      <div style="line-height:1">
-        <div style="font-weight:700">Taste the Token</div>
-        <div class="small">Trip the Market</div>
+      <div>
+        <div style="font-weight:800">Taste the Token</div>
+        <div style="font-size:13px;color:#e9d6e4">Trip the Market</div>
       </div>
     </div>
     <nav>
-      <a href="#token">Tokenomics</a>
-      <a href="#game">Mini-game</a>
+      <a href="#token">Token</a>
+      <a href="#game">Mini‑game</a>
       <a href="#whitepaper">Whitepaper</a>
-      <a href="#community">Community</a>
     </nav>
   </header>
 
   <section class="hero">
-    <div class="hero-inner">
+    <div class="hero-grid">
       <div>
-        <h1 class="headline">Taste the Token. <span style="color:var(--accent)">Trip the Market.</span></h1>
-        <p class="sub">$Edibles is a playful, community-focused token — candy visuals, retro arcade vibes, and on-chain utility.</p>
+        <h1 class="headline">Candy clouds. <span style="color:var(--pink2)">Neon profits.</span></h1>
+        <p class="sub">Float through a sugary pink metaverse. Earn sugar points, vibe with the chart, and enjoy the glossy drip aesthetic — all placeholder‑ready for launch.</p>
         <div class="cta">
-          <button class="btn" id="enterBtn">Enter the Candyverse</button>
-          <button class="ghost" id="connectWallet">Connect Wallet</button>
-          <a class="ghost" href="#token">Buy $Edibles</a>
+          <button class="btn" id="enter">Enter the Candyverse</button>
+          <button class="ghost" id="connect">Connect Wallet</button>
+          <a class="ghost" href="#token">Buy (placeholder)</a>
         </div>
-        <div style="margin-top:18px" class="token-panel">
-          <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="card" style="margin-top:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
             <div>
-              <div class="token-price" id="price">$0.000</div>
-              <div class="meta">
-                <div class="pill" id="change">+0.00%</div>
-                <div class="pill">Market Cap: <strong id="mcap">$--</strong></div>
-                <div class="pill">Supply: 1,000,000,000</div>
+              <div style="font-size:30px;font-weight:1000" id="price">$0.0000</div>
+              <div style="margin-top:8px">
+                <span class="pill" id="chg">+0.00%</span>
+                <span class="pill">Supply: 1,000,000,000</span>
+                <span class="pill">Liquidity: Placeholder</span>
               </div>
             </div>
-            <div style="width:120px;text-align:right">
-              <img src="edibles-hero.jpg" alt="hero" style="width:110px;height:70px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,0.03)" />
+            <div style="width:120px;height:72px;border-radius:10px;overflow:hidden;border:1px solid var(--line)">
+              <img src="edibles-hero.jpg" alt="edibles hero" style="width:100%;height:100%;object-fit:cover">
             </div>
           </div>
         </div>
       </div>
-      <div class="hero-art" id="heroArt">
-        <img src="edibles-hero.jpg" id="heroImg" alt="Edibles art">
+      <div class="art" id="art">
+        <img src="edibles-hero.jpg" alt="$Edibles art" id="heroImg">
+        <div class="gloss"></div>
       </div>
     </div>
   </section>
 
   <section id="token">
-    <h2>Tokenomics</h2>
-    <div class="grid-3">
-      <div style="background:var(--glass);padding:12px;border-radius:12px">
-        <h3>Quick Stats</h3>
+    <h2 style="margin:0 0 8px">Tokenomics</h2>
+    <div class="grid">
+      <div class="card">
+        <h4 style="margin:6px 0">Quick Stats</h4>
         <table>
           <tr><th>Symbol</th><td>$EDIBLES</td></tr>
           <tr><th>Supply</th><td>1,000,000,000</td></tr>
           <tr><th>Burn</th><td>5%</td></tr>
           <tr><th>Tax</th><td>2% redistrib / 3% liquidity</td></tr>
-          <tr><th>Liquidity Locked</th><td>Yes</td></tr>
         </table>
       </div>
-      <div style="background:var(--glass);padding:12px;border-radius:12px">
-        <h3>Distribution</h3>
+      <div class="card">
+        <h4 style="margin:6px 0">Distribution</h4>
         <table>
           <tr><th>Founders</th><td>8%</td></tr>
           <tr><th>Community</th><td>62%</td></tr>
@@ -132,76 +177,195 @@
           <tr><th>Marketing</th><td>10%</td></tr>
         </table>
       </div>
-      <div style="background:var(--glass);padding:12px;border-radius:12px">
-        <h3>Resources</h3>
+      <div class="card">
+        <h4 style="margin:6px 0">Resources</h4>
         <div style="display:flex;flex-direction:column;gap:8px">
+          <a class="ghost" href="#" id="chart">Chart (placeholder)</a>
+          <a class="ghost" href="#" id="buy">Buy (placeholder)</a>
           <a class="ghost" href="#whitepaper">Whitepaper</a>
-          <a class="ghost" href="#">View Chart</a>
-          <a class="ghost" href="#">Buy on DEX</a>
         </div>
       </div>
     </div>
   </section>
 
   <section id="game">
-    <h2>Mini-Game — Click the Candies</h2>
-    <div class="game-stage" id="gameStage">
-      <div class="scoreboard">
-        <div style="font-weight:800">Sugar Points <span id="totalPoints" style="float:right">0</span></div>
-        <div class="leader">Top Scores</div>
-        <div id="leaderboard"><div class="small">No scores yet — play to set one!</div></div>
-        <div style="margin-top:10px;display:flex;gap:8px">
-          <button class="ghost" id="saveScore">Save Score</button>
-          <button class="ghost" id="resetScores">Reset</button>
+    <h2 style="margin:0 0 8px">Mini‑game — Catch the Candies</h2>
+    <div class="stage" id="stage">
+      <div class="hud">
+        <div style="font-weight:900">Sugar Points <span id="pts" style="float:right">0</span></div>
+        <div style="margin-top:8px;font-size:13px;color:#e9d6e4">Click glowing candies before they fade.</div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="ghost" id="spawn">Spawn</button>
+          <button class="ghost" id="resetLB">Reset</button>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="whitepaper" style="display:grid;grid-template-columns:1fr 320px;gap:14px">
-    <div style="background:var(--glass);padding:16px;border-radius:12px">
-      <h3>Whitepaper (Short)</h3>
-      <p>$Edibles is a memetic token built for community, play, and future on-chain utility. Our roadmap: liquidity lock, community farming, NFT airdrops, and game rewards.</p>
-    </div>
-    <div style="background:var(--glass);padding:16px;border-radius:12px">
-      <h4>Community</h4>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-        <a class="ghost" href="#">Twitter</a>
-        <a class="ghost" href="#">Telegram</a>
-        <a class="ghost" href="#">Discord</a>
-      </div>
-    </div>
+  <section id="whitepaper" class="card" style="margin-top:22px">
+    <h3 style="margin:6px 0">Whitepaper (short)</h3>
+    <p style="color:#f1dbe9">$Edibles is a memetic community token with playful aesthetics and future on‑chain utility. Roadmap: Audit → Liquidity Lock → Community Pools → Mini‑game rewards → NFT drops.</p>
   </section>
 
   <footer>
-    <div class="small">© $Edibles 2025 — Made with too much sugar 🍭</div>
+    <div>© $Edibles 2025 — Candyverse</div>
+    <div style="font-size:13px;color:#e9d6e4">Placeholders — replace links & price feed before launch</div>
   </footer>
 </div>
 
 <script>
-const priceEl=document.getElementById('price');
-const changeEl=document.getElementById('change');
-const mcapEl=document.getElementById('mcap');
-let price=0.00075;let supply=1_000_000_000;
-function formatDollar(n){if(n<0.0001)return n.toExponential(3);return'$'+n.toLocaleString(undefined,{minimumFractionDigits:4,maximumFractionDigits:6});}
-function simulatePrice(){const rnd=(Math.random()-0.48)*0.08;price=Math.max(0.0000001,price*(1+rnd));const change=((rnd)*100).toFixed(2)+'%';priceEl.textContent=formatDollar(price);changeEl.textContent=(rnd>=0?'+':'')+change;const mcap=(price*supply);mcapEl.textContent='$'+Math.round(mcap/1e6)+'M';changeEl.style.background=rnd>=0?'linear-gradient(90deg,#b5f0d9,#b7ffd8)':'linear-gradient(90deg,#ffd6e1,#ffc5d1)';}
-simulatePrice();setInterval(simulatePrice,3500);
-const heroImg=document.getElementById('heroImg');
-const heroArt=document.getElementById('heroArt');
-heroArt.addEventListener('mousemove',e=>{const r=heroArt.getBoundingClientRect();const mx=(e.clientX-r.left)/r.width-0.5;const my=(e.clientY-r.top)/r.height-0.5;heroImg.style.transform=`translate3d(${mx*10}px,${my*8}px,0) rotate(${mx*3}deg) scale(1.02)`;});
-heroArt.addEventListener('mouseleave',()=>heroImg.style.transform='scale(1)');
-const gameStage=document.getElementById('gameStage');let points=0;const totalPointsEl=document.getElementById('totalPoints');const leaderboardEl=document.getElementById('leaderboard');
-function spawnCandy(){const candy=document.createElement('div');candy.className='floating-candy';candy.textContent='🍬';const w=gameStage.clientWidth,h=gameStage.clientHeight;const s=44+Math.random()*28;candy.style.width=s+'px';candy.style.height=s+'px';const x=Math.random()*(w-s);const y=Math.random()*(h-s);candy.style.left=x+'px';candy.style.top=y+'px';const dx=(Math.random()-0.5)*120;const dy=(Math.random()-0.5)*100;candy.animate([{transform:'translate(0,0)'},{transform:`translate(${dx}px,${dy}px)`},{transform:'translate(0,0)'}],{duration:4000+Math.random()*4000,iterations:Infinity,direction:'alternate',easing:'ease-in-out'});candy.onclick=e=>{points+=Math.round(5+Math.random()*20);totalPointsEl.textContent=points;candy.remove();setTimeout(spawnCandy,400);if(Math.random()<0.4)setTimeout(spawnCandy,800);};gameStage.appendChild(candy);setTimeout(()=>candy.remove(),18000);}
-for(let i=0;i<6;i++)spawnCandy();
-setInterval(()=>{if(document.visibilityState==='visible')spawnCandy();},1400);
-const LB_KEY='edibles_lb';function loadLB(){const raw=localStorage.getItem(LB_KEY);return raw?JSON.parse(raw):[];}
-function saveLB(n,s){const l=loadLB();l.push({n,s});l.sort((a,b)=>b.s-a.s);localStorage.setItem(LB_KEY,JSON.stringify(l.slice(0,10)));renderLB();}
-function renderLB(){const l=loadLB();leaderboardEl.innerHTML='';if(!l.length){leaderboardEl.innerHTML='<div class="small">No scores yet — play to set one!</div>';return;}l.forEach((r,i)=>{const d=document.createElement('div');d.style.display='flex';d.style.justifyContent='space-between';d.innerHTML=`<div>${i+1}. ${r.n}</div><div>${r.s}</div>`;leaderboardEl.appendChild(d);});}
-document.getElementById('saveScore').onclick=()=>{const n=prompt('Name:','SugarKid');if(n)saveLB(n,points);}
-document.getElementById('resetScores').onclick=()=>{if(confirm('Reset leaderboard?')){localStorage.removeItem(LB_KEY);renderLB();}}
-renderLB();
-const connectBtn=document.getElementById('connectWallet');
-connectBtn.onclick=async()=>{if(window.ethereum){try{const a=await ethereum.request({method:'eth_requestAccounts'});connectBtn.textContent=a[0].slice(0,6)+'...'+a[0].slice(-4);connectBtn.style.background='linear-gradient(90deg,#b0ffd9,#bfffe3)';connectBtn.style.color='#022';}catch(e){alert('Wallet connection cancelled');}}else{if(confirm('No wallet found. Visit MetaMask?'))window.open('https://metamask.io/download.html','_blank');}};
+/* =============================
+   Candy background (Canvas)
+============================= */
+const canvas = document.getElementById('bgCandies');
+const ctx = canvas.getContext('2d');
+let W,H, DPR = Math.min(2, window.devicePixelRatio || 1);
+function resize(){ W = canvas.width = innerWidth * DPR; H = canvas.height = innerHeight * DPR; canvas.style.width = innerWidth+'px'; canvas.style.height = innerHeight+'px'; }
+resize(); addEventListener('resize', resize);
+
+const palette = [ '#ffd1e8', '#ffc1de', '#ff9ac8', '#ff6ea6', '#ffc7ee' ];
+function rand(min,max){ return Math.random()*(max-min)+min }
+
+const MAX = 80; // particles
+const parts = [];
+for(let i=0;i<MAX;i++) parts.push(newCandy());
+
+function newCandy(){
+  return {
+    x: rand(0,W), y: rand(0,H), r: rand(6*DPR, 14*DPR), vx: rand(-0.15,0.15)*DPR, vy: rand(-0.25,0.05)*DPR,
+    c: palette[(Math.random()*palette.length)|0], a: rand(0.35,0.9), t: Math.random()*Math.PI*2
+  }
+}
+
+let mx = -9999, my = -9999;
+addEventListener('mousemove', e=>{ mx = e.clientX * DPR; my = e.clientY * DPR; })
+addEventListener('mouseleave', ()=>{ mx = my = -9999 })
+
+function step(){
+  ctx.clearRect(0,0,W,H);
+  for(const p of parts){
+    // gentle attraction to mouse
+    const dx = mx - p.x, dy = my - p.y; const d = Math.hypot(dx,dy) || 1;
+    if(d < 220*DPR){ p.vx += dx/d * 0.012; p.vy += dy/d * 0.012; }
+
+    p.x += p.vx; p.y += p.vy; p.vx *= 0.985; p.vy = p.vy*0.985 + 0.02; // gravity drift
+
+    // wrap
+    if(p.x < -40) p.x = W+40; if(p.x > W+40) p.x = -40; if(p.y > H+40) { p.y = -20; p.vy *= 0.2 }
+
+    // draw: glowing candy disc
+    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r*1.4);
+    g.addColorStop(0, 'rgba(255,255,255,'+Math.min(0.9,p.a)+')');
+    g.addColorStop(0.35, p.c + 'cc');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.r*1.6, 0, Math.PI*2); ctx.fill();
+  }
+  requestAnimationFrame(step);
+}
+requestAnimationFrame(step);
+
+/* =============================
+   Parallax on hero image
+============================= */
+const art = document.getElementById('art');
+const heroImg = document.getElementById('heroImg');
+art.addEventListener('mousemove', e=>{
+  const r = art.getBoundingClientRect();
+  const mx = (e.clientX - r.left)/r.width - 0.5;
+  const my = (e.clientY - r.top)/r.height - 0.5;
+  heroImg.style.transform = `translate3d(${mx*18}px,${my*12}px,0) rotate(${mx*4}deg) scale(1.03)`;
+});
+art.addEventListener('mouseleave', ()=> heroImg.style.transform = 'translate3d(0,0,0)');
+
+/* =============================
+   Sparkle trail cursor
+============================= */
+let spr = 0; // throttle
+addEventListener('pointermove', (e)=>{
+  if(++spr % 2) return; // half the density
+  const s = document.createElement('div'); s.className='spark';
+  s.style.left = (e.clientX-5)+'px'; s.style.top = (e.clientY-5)+'px';
+  s.style.boxShadow = '0 0 24px #ff6ea6, 0 0 48px #ff93c4';
+  document.body.appendChild(s);
+  s.animate([{transform:'scale(1)',opacity:1},{transform:'scale(0.2)',opacity:0}],{duration:600,easing:'ease-out'}).onfinish=()=>s.remove();
+});
+
+/* =============================
+   Price demo
+============================= */
+let price = 0.00077; const priceEl = document.getElementById('price'); const chgEl = document.getElementById('chg');
+function tickPrice(){
+  const r = (Math.random()-0.49)*0.06; price = Math.max(0.0000001, price*(1+r));
+  priceEl.textContent = '$' + price.toFixed(6);
+  chgEl.textContent = (r>=0?'+':'') + (r*100).toFixed(2) + '%';
+  chgEl.style.background = r>=0 ? 'linear-gradient(90deg,#bfffe3,#b5f0d9)' : 'linear-gradient(90deg,#ffd6e1,#ffc5d1)';
+}
+setInterval(tickPrice, 2800); tickPrice();
+
+/* =============================
+   Mini‑game: spawn + scoring
+============================= */
+const stage = document.getElementById('stage');
+const ptsEl = document.getElementById('pts');
+const spawnBtn = document.getElementById('spawn');
+const resetLB = document.getElementById('resetLB');
+let pts = 0;
+
+function spawnCandyEl(){
+  const el = document.createElement('div');
+  const size = 40 + Math.random()*44;
+  el.style.position='absolute'; el.style.width=size+'px'; el.style.height=size+'px'; el.style.borderRadius='50%';
+  el.style.left = Math.random()*(stage.clientWidth-size)+'px';
+  el.style.top  = Math.random()*(stage.clientHeight-size)+'px';
+  el.style.background = 'linear-gradient(180deg,#ffffff99,#ff9ac8)';
+  el.style.border = '1px solid #ffffff22'; el.style.boxShadow = '0 14px 30px #ff6ea622';
+  el.style.display='grid'; el.style.placeItems='center'; el.style.color='#2b0016'; el.style.fontWeight='900';
+  el.textContent = ['🍬','🍭','🍫','🍡'][ (Math.random()*4)|0 ];
+  stage.appendChild(el);
+  const anim = el.animate([
+    { transform:'translate3d(0,0,0)', opacity:1 },
+    { transform:`translate3d(${(Math.random()*2-1)*60}px,${(Math.random()*2-1)*50}px,0)`, opacity:0.85 },
+    { transform:'translate3d(0,0,0)', opacity:1 }
+  ], { duration: 3500 + Math.random()*2500, iterations: Infinity, direction: 'alternate', easing:'ease-in-out' });
+
+  el.addEventListener('click', ()=>{
+    pts += Math.round(10 + Math.random()*40); ptsEl.textContent = pts; anim.cancel();
+    // pop confetti
+    for(let i=0;i<8;i++) sprinkle(el.offsetLeft+size/2, el.offsetTop+size/2);
+    el.remove();
+  });
+  // auto remove
+  setTimeout(()=> el.remove(), 16000);
+}
+
+function sprinkle(x,y){
+  const d = document.createElement('div'); d.className='spark'; d.style.left=(stage.getBoundingClientRect().left+x-3)+'px'; d.style.top=(stage.getBoundingClientRect().top+y-3)+'px';
+  d.style.boxShadow='0 0 16px #ff93c4, 0 0 32px #ff6ea6'; document.body.appendChild(d);
+  const ang = Math.random()*Math.PI*2; const dist = 40+Math.random()*40;
+  d.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${Math.cos(ang)*dist}px,${Math.sin(ang)*dist}px) scale(.4)`,opacity:0}],[{duration:600,easing:'cubic-bezier(.2,.9,.3,1)'}][0]).onfinish=()=>d.remove();
+}
+
+spawnBtn.addEventListener('click', ()=> { for(let i=0;i<6;i++) spawnCandyEl(); });
+resetLB.addEventListener('click', ()=> { pts = 0; ptsEl.textContent = '0'; });
+
+/* =============================
+   Wallet stub & helpers
+============================= */
+const connect = document.getElementById('connect');
+connect.addEventListener('click', async ()=>{
+  if(window.ethereum){
+    try{ const acc = await ethereum.request({method:'eth_requestAccounts'}); const a = acc[0];
+      connect.textContent = a.slice(0,6)+'…'+a.slice(-4);
+      connect.style.background = 'linear-gradient(90deg,#b0ffd9,#bfffe3)'; connect.style.color = '#022';
+    }catch(e){ alert('Wallet connection cancelled'); }
+  }else{ if(confirm('No wallet found. Visit MetaMask?')) open('https://metamask.io/download.html','_blank'); }
+});
+
+// quick scroll
+document.getElementById('enter').addEventListener('click', ()=> document.querySelector('#token').scrollIntoView({behavior:'smooth'}));
+
+// helpful placeholder alerts
+['chart','buy'].forEach(id=>{ const el = document.getElementById(id); if(el) el.addEventListener('click', e=>{ e.preventDefault(); alert('Replace with DexScreener / DEX link (placeholder)'); }); });
 </script>
 </body>
 </html>
