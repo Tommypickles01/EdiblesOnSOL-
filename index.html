@@ -18,28 +18,13 @@
     radial-gradient(900px 500px at 85% 80%, #8ec9ff12, transparent),
     linear-gradient(180deg,var(--bg1),var(--bg2) 50%, var(--bg3));}
 
-  /* Candy drip polish (mask removes hard pink bar) */
-  .drips, .drips.bottom{
-    opacity:.72;
-    mix-blend-mode:screen;
-    -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1)0%,rgba(0,0,0,1)58%,rgba(0,0,0,0)100%);
-            mask-image:linear-gradient(to bottom,rgba(0,0,0,1)0%,rgba(0,0,0,1)58%,rgba(0,0,0,0)100%);
-  }
-  .drips.bottom{
-    transform:scaleY(-1);
-    -webkit-mask-image:linear-gradient(to top,rgba(0,0,0,1)0%,rgba(0,0,0,1)58%,rgba(0,0,0,0)100%);
-            mask-image:linear-gradient(to top,rgba(0,0,0,1)0%,rgba(0,0,0,1)58%,rgba(0,0,0,0)100%);
-  }
-  .drips{top:-6px;height:120px;}
-
-  /* stage */
+  /* stages */
   #bg{position:fixed;inset:0;z-index:0;pointer-events:none}
   .stage{position:fixed;inset:0;display:grid;place-items:center;z-index:1}
   .card{position:relative;z-index:2;width:min(780px,92vw);border-radius:20px;overflow:hidden;
     border:1px solid rgba(255,255,255,0.08);
     background:linear-gradient(180deg,#ffffff0a,#00000010);
     box-shadow:0 30px 80px rgba(0,0,0,0.35), inset 0 -12px 24px rgba(0,0,0,0.25);}
-
   .hero{position:relative;height:360px}
   .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:drop-shadow(0 30px 50px rgba(0,0,0,.6))}
   .gloss{position:absolute;inset:0;mix-blend-mode:screen;pointer-events:none}
@@ -60,25 +45,58 @@
   .bar>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--pink),var(--pink2));box-shadow:0 0 24px #ff6ea673 inset}
   .skip{background:transparent;border:1px solid rgba(255,255,255,0.08);color:#fff;border-radius:10px;padding:8px 12px;cursor:pointer}
   .fadeOut{opacity:0;transition:opacity .35s ease}
+
+  /* simple positions for drips; masking handled inside SVG */
+  .drips, .drips-bottom{position:fixed;left:0;right:0;height:120px;pointer-events:none;z-index:3;opacity:.9}
+  .drips{top:0}
+  .drips-bottom{bottom:0}
 </style>
 </head>
 <body>
 <canvas id="bg"></canvas>
 
-<!-- Animated drips -->
+<!-- TOP DRIPS (with internal mask) -->
 <svg class="drips" viewBox="0 0 1200 140" preserveAspectRatio="none" aria-hidden="true">
-  <defs><linearGradient id="gTop" x1="0" x2="1"><stop offset="0" stop-color="#ff6ea6"/><stop offset="1" stop-color="#ff93c4"/></linearGradient></defs>
-  <path d="M0,30 C80,90 140,20 220,44 C300,68 360,24 420,40 C480,56 540,18 620,48 C700,78 780,36 860,46 C940,56 1000,44 1080,66 C1160,88 1200,30 1200,30 L1200,140 L0,140 Z" fill="url(#gTop)" opacity="0.95">
+  <defs>
+    <linearGradient id="ed_gTop" x1="0" x2="1">
+      <stop offset="0" stop-color="#ff6ea6"/><stop offset="1" stop-color="#ff93c4"/>
+    </linearGradient>
+    <linearGradient id="ed_fadeTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff"/><stop offset="70%" stop-color="#fff"/><stop offset="100%" stop-color="#000"/>
+    </linearGradient>
+    <mask id="ed_maskTop"><rect width="1200" height="140" fill="url(#ed_fadeTop)"/></mask>
+  </defs>
+  <path mask="url(#ed_maskTop)" fill="url(#ed_gTop)" opacity="0.95"
+        d="M0,30 C80,90 140,20 220,44 C300,68 360,24 420,40 C480,56 540,18 620,48 C700,78 780,36 860,46 C940,56 1000,44 1080,66 C1160,88 1200,30 1200,30 L1200,140 L0,140 Z">
     <animate attributeName="d" dur="6.4s" repeatCount="indefinite"
       values="
       M0,30 C80,90 140,20 220,44 C300,68 360,24 420,40 C480,56 540,18 620,48 C700,78 780,36 860,46 C940,56 1000,44 1080,66 C1160,88 1200,30 1200,30 L1200,140 L0,140 Z;
       M0,26 C80,74 140,30 220,58 C300,92 360,8 420,24 C480,40 540,22 620,62 C700,102 780,44 860,58 C940,70 1000,50 1080,86 C1160,110 1200,26 1200,26 L1200,140 L0,140 Z;
       M0,34 C80,98 140,16 220,34 C300,52 360,28 420,52 C480,76 540,20 620,44 C700,68 780,30 860,40 C940,50 1000,42 1080,60 C1160,78 1200,34 1200,34 L1200,140 L0,140 Z
-      " />
+      "/>
   </path>
 </svg>
-<svg class="drips bottom" viewBox="0 0 1200 140" preserveAspectRatio="none" aria-hidden="true">
-  <use href=".drips path"/>
+
+<!-- BOTTOM DRIPS (with internal mask) -->
+<svg class="drips-bottom" viewBox="0 0 1200 140" preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="ed_gBot" x1="0" x2="1">
+      <stop offset="0" stop-color="#ff6ea6"/><stop offset="1" stop-color="#ff93c4"/>
+    </linearGradient>
+    <linearGradient id="ed_fadeBot" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#fff"/><stop offset="70%" stop-color="#fff"/><stop offset="100%" stop-color="#000"/>
+    </linearGradient>
+    <mask id="ed_maskBot"><rect width="1200" height="140" fill="url(#ed_fadeBot)"/></mask>
+  </defs>
+  <path mask="url(#ed_maskBot)" fill="url(#ed_gBot)" opacity="0.85"
+        d="M0,30 C80,90 140,20 220,44 C300,68 360,24 420,40 C480,56 540,18 620,48 C700,78 780,36 860,46 C940,56 1000,44 1080,66 C1160,88 1200,30 1200,30 L1200,140 L0,140 Z">
+    <animate attributeName="d" dur="6.4s" repeatCount="indefinite"
+      values="
+      M0,30 C80,90 140,20 220,44 C300,68 360,24 420,40 C480,56 540,18 620,48 C700,78 780,36 860,46 C940,56 1000,44 1080,66 C1160,88 1200,30 1200,30 L1200,140 L0,140 Z;
+      M0,26 C80,74 140,30 220,58 C300,92 360,8 420,24 C480,40 540,22 620,62 C700,102 780,44 860,58 C940,70 1000,50 1080,86 C1160,110 1200,26 1200,26 L1200,140 L0,140 Z;
+      M0,34 C80,98 140,16 220,34 C300,52 360,28 420,52 C480,76 540,20 620,44 C700,68 780,30 860,40 C940,50 1000,42 1080,60 C1160,78 1200,34 1200,34 L1200,140 L0,140 Z
+      "/>
+  </path>
 </svg>
 
 <div class="stage">
