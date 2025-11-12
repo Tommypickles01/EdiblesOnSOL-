@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>$Edibles — Taste the Token</title>
+<link rel="icon" href="data:," />
+<style>
+  /* ---------- Palette & reset ---------- */
+  :root{
+    --bg1:#0b0710;   /* deep midnight */
+    --bg2:#12061a;   /* deep magenta */
+    --pink:#ff6ea6;
+    --pink-2:#ff93c4;
+    --neon:#ff3b7a;
+    --glass: rgba(255,255,255,0.04);
+    --card: rgba(255,255,255,0.03);
+    --accent:#ffd7f0;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:radial-gradient(1200px 600px at 10% 10%, rgba(255,120,170,0.06), transparent), linear-gradient(180deg,var(--bg1),var(--bg2));color:#fff;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1200px;margin:0 auto;padding:28px;position:relative;z-index:5}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo-pill{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:14px;background:linear-gradient(90deg,var(--pink),var(--pink-2));font-weight:800;color:#250018;box-shadow:0 8px 40px rgba(255,105,160,0.12), inset 0 -6px 18px rgba(0,0,0,0.25)}
+  nav{display:flex;gap:10px}
+  nav a{padding:8px 12px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.02)}
+  .small{font-size:13px;color:rgba(255,255,255,0.78)}
+
+  /* ---------- Hero + drip ---------- */
+  .hero{
+    margin-top:18px;border-radius:18px;padding:28px;position:relative;overflow:hidden;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.03);
+  }
+  .hero-grid{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center}
+  .headline{font-size:40px;line-height:1.02;margin:0 0 12px;font-weight:900;letter-spacing:-0.02em;text-shadow:0 12px 50px rgba(255,105,160,0.06)}
+  .sub{color:rgba(255,255,255,0.9);margin-bottom:18px;font-weight:600}
+  .cta-row{display:flex;gap:12px;align-items:center}
+  .btn{
+    background:linear-gradient(90deg,var(--neon),#ffa2c9);padding:12px 18px;border-radius:14px;border:none;color:#200014;font-weight:800;cursor:pointer;box-shadow:0 14px 40px rgba(255,59,122,0.12)
+  }
+  .ghost{background:transparent;border:1px solid rgba(255,255,255,0.05);padding:10px 14px;border-radius:12px}
+
+  /* hero art */
+  .art-wrap{position:relative;border-radius:14px;overflow:visible;display:flex;align-items:center;justify-content:center;height:360px}
+  .art-card{width:100%;height:100%;border-radius:14px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.03)}
+  .art-card img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:center;transition:transform .7s cubic-bezier(.2,.9,.3,1);filter:drop-shadow(0 30px 50px rgba(0,0,0,0.6))}
+  /* glossy overlay */
+  .gloss{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen}
+  .gloss:before{content:'';position:absolute;left:-10%;top:-20%;width:120%;height:120%;background:radial-gradient(600px 300px at 20% 10%, rgba(255,255,255,0.06), transparent);transform:rotate(-20deg)}
+  /* drip SVG container */
+  .drips{position:absolute;left:0;right:0;bottom:-20px;height:160px;pointer-events:none;z-index:3;opacity:0.95}
+
+  /* floating candies (particles) */
+  .particles{position:absolute;inset:0;pointer-events:none;z-index:2}
+  .candy{
+    position:absolute;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;
+    box-shadow:0 12px 30px rgba(255,80,150,0.12);cursor:pointer;user-select:none;
+    transform-origin:center;
+  }
+  .candy.small{width:36px;height:36px;font-size:14px}
+  @keyframes floaty {
+    0%{transform:translateY(0) translateX(0) rotate(0)}
+    50%{transform:translateY(-56px) translateX(18px) rotate(8deg)}
+    100%{transform:translateY(0) translateX(0) rotate(0)}
+  }
+
+  /* token panel */
+  .panel{background:var(--card);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+  .token-price{font-size:30px;font-weight:900}
+  .pills{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .pill{background:rgba(0,0,0,0.18);padding:6px 10px;border-radius:10px;font-weight:700}
+
+  /* sections */
+  section{margin-top:22px}
+  .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:8px;text-align:left;border-bottom:1px dashed rgba(255,255,255,0.03)}
+  footer{margin-top:26px;padding:10px 6px;color:rgba(255,255,255,0.6);display:flex;justify-content:space-between;align-items:center;gap:12px}
+
+  /* responsiveness */
+  @media (max-width:960px){ .hero-grid{grid-template-columns:1fr} .art-wrap{height:260px} .logo-pill{font-size:14px} .headline{font-size:28px} }
+</style>
+</head>
+<body>
+  <!-- soft blurred orbs (backdrop) -->
+  <div style="position:fixed;inset:0;z-index:0;pointer-events:none">
+    <div style="position:absolute;left:6%;top:8%;width:420px;height:420px;border-radius:50%;filter:blur(90px);background:radial-gradient(circle,#ff6ea6,#ffc7e6);opacity:0.12"></div>
+    <div style="position:absolute;right:6%;bottom:6%;width:320px;height:320px;border-radius:50%;filter:blur(80px);background:radial-gradient(circle,#8ec9ff,#dff3ff);opacity:0.08"></div>
+  </div>
+
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo-pill">$EDIBLES</div>
+        <div>
+          <div style="font-weight:800">Taste the Token</div>
+          <div class="small">Trip the Market — demo</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#token" class="small">Token</a>
+        <a href="#game" class="small">Mini-game</a>
+        <a href="#whitepaper" class="small">Whitepaper</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-grid">
+          <!-- left: description + token panel -->
+          <div>
+            <h1 id="hero-title" class="headline">Taste the Token. <span style="color:var(--pink-2)">Trip the Market.</span></h1>
+            <p class="sub">Candy-drip aesthetics, community-first tokenomics, and playful on-chain utility. Below is a demo layout — replace placeholders with your contract and links.</p>
+            <div class="cta-row" style="margin-bottom:14px">
+              <button class="btn" id="enterBtn">Enter the Candyverse</button>
+              <button class="ghost" id="connectWallet">Connect Wallet</button>
+              <a class="ghost" href="#game">Play</a>
+            </div>
+
+            <div class="panel">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <div class="token-price" id="price">$0.0000</div>
+                  <div class="pills">
+                    <div class="pill" id="change">+0.00%</div>
+                    <div class="pill">Supply: 1,000,000,000</div>
+                    <div class="pill">Liquidity: Placeholder</div>
+                  </div>
+                </div>
+                <div style="width:110px;height:72px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);margin-left:12px">
+                  <img src="/mnt/data/E1AA93A8-C950-4FA6-B10A-692AC69B48AC.jpeg" alt="hero" style="width:100%;height:100%;object-fit:cover;display:block">
+                </div>
+              </div>
+              <div style="margin-top:12px;font-size:13px;color:rgba(255,255,255,0.86)">
+                <strong>Notes:</strong> Price demo; links are placeholders. Replace chart & buy links with your contract URL / DEX swap link.
+              </div>
+            </div>
+          </div>
+
+          <!-- right: art + drips + particles -->
+          <div class="art-wrap" aria-hidden="false">
+            <div class="art-card" id="artCard">
+              <img id="heroImg" src="/mnt/data/E1AA93A8-C950-4FA6-B10A-692AC69B48AC.jpeg" alt="Edibles art">
+              <div class="gloss"></div>
+            </div>
+
+            <!-- draggable floating candies (decor) -->
+            <div class="particles" id="particles"></div>
+
+            <!-- drip SVG -->
+            <svg class="drips" viewBox="0 0 1200 160" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#ff6ea6"/><stop offset="1" stop-color="#ff93c4"/></linearGradient>
+              </defs>
+              <path id="dripPath" d="M0,40 C80,80 140,20 220,40 C300,60 360,40 420,48 C480,56 540,20 620,48 C700,76 780,36 860,48 C940,60 1000,50 1080,68 C1160,86 1200,40 1200,40 L1200,160 L0,160 Z" fill="url(#g1)" opacity="0.95">
+                <animate attributeName="d" dur="6s" repeatCount="indefinite"
+                  values="
+                  M0,40 C80,80 140,20 220,40 C300,60 360,40 420,48 C480,56 540,20 620,48 C700,76 780,36 860,48 C940,60 1000,50 1080,68 C1160,86 1200,40 1200,40 L1200,160 L0,160 Z;
+                  M0,36 C80,68 140,28 220,54 C300,82 360,20 420,36 C480,52 540,28 620,68 C700,102 780,44 860,60 C940,76 1000,56 1080,86 C1160,110 1200,36 1200,36 L1200,160 L0,160 Z;
+                  M0,42 C80,86 140,18 220,36 C300,54 360,40 420,60 C480,80 540,26 620,48 C700,66 780,30 860,40 C940,50 1000,44 1080,62 C1160,80 1200,42 1200,42 L1200,160 L0,160 Z
+                  " />
+              </path>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- tokenomics -->
+      <section id="token">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h2 style="margin:0">Tokenomics</h2>
+          <div class="small">Placeholders — edit later</div>
+        </div>
+        <div style="margin-top:12px" class="grid-3">
+          <div class="panel">
+            <h4 style="margin:6px 0">Quick Stats</h4>
+            <table>
+              <tr><th>Symbol</th><td>$EDIBLES</td></tr>
+              <tr><th>Supply</th><td>1,000,000,000</td></tr>
+              <tr><th>Burn</th><td>5%</td></tr>
+              <tr><th>Tax</th><td>2% redistrib / 3% liquidity</td></tr>
+            </table>
+          </div>
+          <div class="panel">
+            <h4 style="margin:6px 0">Distribution</h4>
+            <table>
+              <tr><th>Founders</th><td>8%</td></tr>
+              <tr><th>Community</th><td>62%</td></tr>
+              <tr><th>Liquidity</th><td>20%</td></tr>
+              <tr><th>Marketing</th><td>10%</td></tr>
+            </table>
+          </div>
+          <div class="panel">
+            <h4 style="margin:6px 0">Resources</h4>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <a class="ghost" href="#" id="chart">View Chart (placeholder)</a>
+              <a class="ghost" href="#" id="buy">Buy $EDIBLES (placeholder)</a>
+              <a class="ghost" href="#whitepaper">Whitepaper</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- mini-game short -->
+      <section id="game">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h2 style="margin:0">Mini-game</h2>
+          <div class="small">Click floating edibles to collect sugar points (local leaderboard)</div>
+        </div>
+        <div style="margin-top:12px" class="panel" id="gameStage" style="min-height:220px;position:relative;">
+          <div style="position:relative;height:260px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));border-radius:8px;overflow:hidden;">
+            <!-- candies spawn here on demo -->
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="ghost" id="playBtn">Spawn Candies</button>
+            <button class="ghost" id="saveScore">Save Score</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="whitepaper" style="display:grid;grid-template-columns:1fr 320px;gap:12px">
+        <div class="panel">
+          <h3>Whitepaper (short)</h3>
+          <p style="color:var(--accent)">$Edibles is a memetic community token built for play, art, and future on-chain utility. Roadmap: Audit → Liquidity Lock → Community Pools → Mini-game rewards → NFT drops.</p>
+        </div>
+        <div class="panel">
+          <h4>Community</h4>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <a class="ghost" href="#" id="twt">Twitter</a>
+            <a class="ghost" href="#" id="tg">Telegram</a>
+            <a class="ghost" href="#" id="dc">Discord</a>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div>© $Edibles 2025 — demo</div>
+        <div class="small">Placeholders — Replace contract and DEX links before launch</div>
+      </footer>
+    </main>
+  </div>
+
+<script>
+/* ---------- Small interactive behaviors ---------- */
+
+/* 1) hero parallax */
+const artCard = document.getElementById('artCard');
+const heroImg = document.getElementById('heroImg');
+artCard.addEventListener('mousemove', e=>{
+  const r = artCard.getBoundingClientRect();
+  const mx = (e.clientX - r.left) / r.width - 0.5;
+  const my = (e.clientY - r.top) / r.height - 0.5;
+  heroImg.style.transform = `translate3d(${mx*18}px,${my*12}px,0) rotate(${mx*4}deg) scale(1.03)`;
+});
+artCard.addEventListener('mouseleave', ()=> heroImg.style.transform='translate3d(0,0,0)');
+
+/* 2) spawn decorative candies */
+
+const particles = document.getElementById('particles');
+const candyEmojis = ['🍬','🍭','🍫','🍡','🍪'];
+function spawnDecor(x,y,size=56,emoji='🍬',cls=''){
+  const el = document.createElement('div');
+  el.className = 'candy '+cls;
+  el.style.left = x+'px';
+  el.style.top = y+'px';
+  el.style.width = size+'px';
+  el.style.height = size+'px';
+  el.style.fontSize = (size*0.42)+'px';
+  el.style.background = 'linear-gradient(180deg,#fff6,#ff9ac8)';
+  el.style.color = '#2b0016';
+  el.style.border = '1px solid rgba(255,255,255,0.04)';
+  el.textContent = emoji;
+  const dur = 4000 + Math.random()*6000;
+  el.style.animation = `floaty ${dur}ms ease-in-out infinite`;
+  el.style.opacity = 0.98;
+  el.addEventListener('click', ()=> {
+    // little pop animation
+    el.style.transform = 'scale(1.12)';
+    setTimeout(()=> el.remove(),200);
+  });
+  particles.appendChild(el);
+  // auto remove after 18s
+  setTimeout(()=> el.remove(),18000);
+}
+
+/* initial decorative particles around art */
+function initDecor(){
+  const area = artCard.getBoundingClientRect();
+  // spawn 6 near the art area (positions are relative to art-card using client coords)
+  for(let i=0;i<6;i++){
+    const x = (Math.random()*0.6 + 0.2) * artCard.clientWidth;
+    const y = (Math.random()*0.6 + 0.1) * artCard.clientHeight;
+    spawnDecor(x,y, 36 + Math.random()*40, candyEmojis[Math.floor(Math.random()*candyEmojis.length)], (Math.random()>0.6?'small':''));
+  }
+}
+initDecor();
+setInterval(()=> {
+  // spawn a single decorative candy occasionally
+  const x = Math.random() * artCard.clientWidth;
+  const y = Math.random() * artCard.clientHeight;
+  spawnDecor(x,y,36 + Math.random()*36, candyEmojis[Math.floor(Math.random()*candyEmojis.length)]);
+}, 2200);
+
+/* 3) quick simulated price (placeholder) */
+let price = 0.00077;
+const priceEl = document.getElementById('price');
+const changeEl = document.getElementById('change');
+function simulate(){
+  const r = (Math.random()-0.49) * 0.06;
+  price = Math.max(0.0000001, price*(1+r));
+  priceEl.textContent = '$' + price.toFixed(6);
+  changeEl.textContent = (r>=0?'+':'') + (r*100).toFixed(2) + '%';
+  changeEl.style.background = r>=0 ? 'linear-gradient(90deg,#bfffe3,#b5f0d9)' : 'linear-gradient(90deg,#ffd6e1,#ffc5d1)';
+}
+simulate(); setInterval(simulate, 3000);
+
+/* 4) mini-game quick spawn (local points) */
+let points = 0;
+const playBtn = document.getElementById('playBtn');
+const gameStage = document.getElementById('gameStage');
+playBtn.addEventListener('click', ()=> {
+  // spawn 6 clickable candies inside the panel
+  const panel = gameStage.querySelector('div');
+  for(let i=0;i<6;i++){
+    const el = document.createElement('div');
+    el.className = 'candy';
+    el.style.position='absolute';
+    const w = panel.clientWidth, h = panel.clientHeight;
+    const size = 34 + Math.random()*46;
+    const x = Math.random()*(w-size), y = Math.random()*(h-size);
+    el.style.left = x+'px'; el.style.top = y+'px';
+    el.style.width = size+'px'; el.style.height = size+'px'; el.style.fontSize = (size*0.5)+'px';
+    el.style.background = 'linear-gradient(180deg,#fff6,#ffb0d6)';
+    el.textContent = candyEmojis[Math.floor(Math.random()*candyEmojis.length)];
+    el.addEventListener('click', ()=> {
+      points += Math.round(5 + Math.random()*40);
+      el.remove();
+      alert('+ points! Total: ' + points);
+    });
+    panel.appendChild(el);
+    setTimeout(()=> el.remove(),18000);
+  }
+});
+
+/* 5) wallet connect (stub) */
+const cw = document.getElementById('connectWallet');
+cw.addEventListener('click', async ()=>{
+  if(window.ethereum){
+    try{
+      const accs = await window.ethereum.request({method:'eth_requestAccounts'});
+      cw.textContent = accs[0].slice(0,6) + '...' + accs[0].slice(-4);
+      cw.style.background = 'linear-gradient(90deg,#b0ffd9,#bfffe3)';
+      cw.style.color = '#022';
+    }catch(e){ alert('Connection canceled') }
+  }else{
+    if(confirm('No Ethereum provider found. Open MetaMask site?')) window.open('https://metamask.io/download.html','_blank');
+  }
+});
+
+/* 6) helpful placeholders (chart/buy) */
+document.getElementById('chart').addEventListener('click', e=>{ e.preventDefault(); alert('Replace with DexScreener / DexTools chart link (placeholder).'); });
+document.getElementById('buy').addEventListener('click', e=>{ e.preventDefault(); alert('Replace with Uniswap/PancakeSwap swap link once contract is deployed.'); });
+
+/* small UX: spawn a few more decorative candies when viewport visible */
+document.addEventListener('visibilitychange', ()=> { if(document.visibilityState==='visible') initDecor(); });
+
+</script>
+</body>
+</html>
