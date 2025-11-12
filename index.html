@@ -8,132 +8,113 @@
 <link rel="icon" href="data:," />
 <style>
   :root{
-    --bg1:#0b0710; --bg2:#12061a;
-    --pink:#ff6ea6; --pink2:#ff93c4; --glow:#ff3b7a;
-    --glass: rgba(255,255,255,0.06);
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    --bg1:#0b0710; --bg2:#170a22; --bg3:#240b34;
+    --pink:#ff6ea6; --pink2:#ff93c4; --neon:#ff3b7a; --accent:#ffd7f0;
+    --line: rgba(255,255,255,0.08);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   }
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;background:
-    radial-gradient(1200px 600px at 10% 10%, rgba(255,120,170,0.08), transparent),
-    linear-gradient(180deg,var(--bg1),var(--bg2));
-    color:#fff; overflow:hidden}
-  .wrap{position:relative;display:grid;place-items:center;height:100vh;padding:24px}
-  /* soft orbs behind */
-  .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.14;pointer-events:none}
-  .orb.p1{width:520px;height:520px;left:6%;top:6%;background:radial-gradient(circle,#ff6ea6,#ffd6ef)}
-  .orb.p2{width:380px;height:380px;right:6%;bottom:10%;background:radial-gradient(circle,#8ec9ff,#dff3ff);opacity:.1}
+  html,body{height:100%;margin:0;color:#fff;overflow:hidden;background:
+    radial-gradient(1200px 600px at 12% 12%, #ff6ea612, transparent),
+    radial-gradient(900px 500px at 85% 80%, #8ec9ff12, transparent),
+    linear-gradient(180deg,var(--bg1),var(--bg2) 50%, var(--bg3));}
 
-  .card{
-    position:relative;z-index:2;width:min(720px,92vw);
-    padding:26px 22px 18px;border-radius:18px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-    border:1px solid rgba(255,255,255,0.05);
+  /* full-screen stage */
+  .stage{position:fixed;inset:0;display:grid;place-items:center}
+
+  /* background particles canvas */
+  #bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+  /* top/bottom animated drips to match app.html */
+  .drips{position:fixed;left:0;right:0;top:0;height:140px;z-index:3;pointer-events:none;opacity:.96}
+  .drips.bottom{top:auto;bottom:0;transform:scaleY(-1);opacity:.85}
+
+  /* soft orbs (depth) */
+  .orbs{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .orb{position:absolute;border-radius:50%;filter:blur(84px);opacity:.14}
+  .orb.p1{left:6%;top:8%;width:520px;height:520px;background:radial-gradient(circle,#ff6ea6,#ffd6ef)}
+  .orb.p2{right:8%;bottom:8%;width:360px;height:360px;background:radial-gradient(circle,#8ec9ff,#dff3ff);opacity:.10}
+
+  /* card */
+  .card{position:relative;z-index:2;width:min(780px,92vw);border-radius:20px;overflow:hidden;
+    border:1px solid var(--line);
+    background:linear-gradient(180deg,#ffffff08,#00000010);
     box-shadow:0 30px 80px rgba(0,0,0,0.35), inset 0 -12px 24px rgba(0,0,0,0.25);
-    overflow:hidden;
-  }
+    animation:popIn .6s cubic-bezier(.2,.9,.3,1) both}
+  @keyframes popIn{from{transform:translateY(12px) scale(.98);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
 
-  /* logo/image */
-  .logo-wrap{
-    position:relative;border-radius:14px;overflow:hidden;height:320px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
-    border:1px solid rgba(255,255,255,0.05);
-  }
-  .logo-wrap img{
-    width:100%;height:100%;object-fit:cover;display:block;
-    filter:drop-shadow(0 30px 50px rgba(0,0,0,0.65));
-    transform-origin:center;animation:float 8s ease-in-out infinite;
-  }
-  @keyframes float{
-    0%{transform:translateY(0) scale(1)}
-    50%{transform:translateY(-8px) scale(1.01)}
-    100%{transform:translateY(0) scale(1)}
-  }
+  .hero{position:relative;height:360px}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:drop-shadow(0 30px 50px rgba(0,0,0,.6));
+    transform-origin:center;animation:float 8s ease-in-out infinite}
+  @keyframes float{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.01)}100%{transform:translateY(0) scale(1)}}
 
-  /* glossy sweep */
-  .gloss{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen}
-  .gloss:before{
-    content:"";position:absolute;left:-30%;top:-50%;width:160%;height:160%;
-    background:radial-gradient(600px 300px at 20% 10%, rgba(255,255,255,0.07), transparent);
-    transform:rotate(-18deg);
-    animation:glossMove 3.2s ease-in-out infinite;
-  }
-  @keyframes glossMove{
-    0%,100%{transform:translateX(0) rotate(-18deg)}
-    50%{transform:translateX(4%) rotate(-18deg)}
-  }
+  .gloss{position:absolute;inset:0;mix-blend-mode:screen;pointer-events:none}
+  .gloss:before{content:"";position:absolute;left:-30%;top:-50%;width:160%;height:160%;
+    background:radial-gradient(600px 300px at 20% 10%, #ffffff16, transparent);transform:rotate(-18deg);
+    animation:glossMove 3.2s ease-in-out infinite}
+  @keyframes glossMove{0%,100%{transform:translateX(0) rotate(-18deg)}50%{transform:translateX(4%) rotate(-18deg)}}
 
-  /* dripping bar */
-  .drip{
-    position:absolute;left:0;right:0;bottom:-1px;height:110px;z-index:3;opacity:.98;pointer-events:none;
-  }
+  .meta{display:flex;align-items:center;gap:12px;padding:14px}
+  .title{font-weight:1000;letter-spacing:.2px}
+  .bar{flex:1;height:10px;border-radius:999px;background:#ffffff10;border:1px solid var(--line);overflow:hidden}
+  .bar>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--pink),var(--pink2));
+    box-shadow:0 0 24px #ff6ea673 inset, 0 6px 24px #ff6ea644}
+  .pill{padding:6px 10px;border-radius:10px;border:1px solid var(--line)}
+  .skip{margin-left:6px;background:transparent;border:1px solid var(--line);color:#fff;border-radius:10px;padding:8px 12px;cursor:pointer}
+  .hint{padding:0 14px 16px;color:#e9d6e4;font-size:13px}
 
-  /* progress + text */
-  .meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
-  .text{
-    font-weight:800;letter-spacing:.2px;
-    text-shadow:0 10px 40px rgba(255,105,160,0.15);
-  }
-  .bar{flex:1;height:10px;border-radius:999px;background:rgba(255,255,255,0.06);overflow:hidden;border:1px solid rgba(255,255,255,0.06)}
-  .bar > i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--pink),var(--pink2));box-shadow:0 0 24px rgba(255,110,166,0.45) inset, 0 6px 24px rgba(255,110,166,0.25)}
-  .skip{margin-left:8px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:10px;padding:8px 12px;cursor:pointer}
-
-  /* floating candies */
-  .candy{
-    position:absolute;inset:auto; width:48px;height:48px;border-radius:50%;
+  /* floating emoji candies over the hero */
+  .candy{position:absolute;inset:auto; width:48px;height:48px;border-radius:50%;
     display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;
     background:linear-gradient(180deg,#fff6,#ff9ac8); color:#2b0016;
-    border:1px solid rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.08);
     box-shadow:0 12px 30px rgba(255,80,150,0.15);
     animation:floaty var(--dur,6s) ease-in-out infinite;
-    user-select:none;
-  }
-  @keyframes floaty{
-    0%{transform:translateY(0) translateX(0) rotate(0)}
-    50%{transform:translateY(-40px) translateX(16px) rotate(8deg)}
-    100%{transform:translateY(0) translateX(0) rotate(0)}
-  }
+    user-select:none;z-index:2}
+  @keyframes floaty{0%{transform:translateY(0) translateX(0) rotate(0)}50%{transform:translateY(-40px) translateX(16px) rotate(8deg)}100%{transform:translateY(0) translateX(0) rotate(0)}}
 
-  /* accessibility hint */
-  .hint{margin-top:10px;color:#d8cad5;font-size:13px}
+  /* fade out when redirecting */
+  .fadeOut{opacity:0;transition:opacity .35s ease}
 </style>
 </head>
 <body>
-<div class="wrap" role="main" aria-label="$Edibles loading screen">
-  <div class="orb p1"></div><div class="orb p2"></div>
+<canvas id="bg"></canvas>
 
-  <div class="card">
-    <div class="logo-wrap" aria-label="Edibles intro graphic">
-      <!-- Use your hero art here -->
+<!-- matching drips (same shapes as app.html) -->
+<svg class="drips" viewBox="0 0 1200 140" preserveAspectRatio="none" aria-hidden="true">
+  <defs><linearGradient id="gTop" x1="0" x2="1"><stop offset="0" stop-color="#ff6ea6"/><stop offset="1" stop-color="#ff93c4"/></linearGradient></defs>
+  <path d="M0,30 C80,90 140,20 220,44 C300,68 360,24 420,40 C480,56 540,18 620,48 C700,78 780,36 860,46 C940,56 1000,44 1080,66 C1160,88 1200,30 1200,30 L1200,140 L0,140 Z" fill="url(#gTop)" opacity="0.95">
+    <animate attributeName="d" dur="6.4s" repeatCount="indefinite"
+      values="
+      M0,30 C80,90 140,20 220,44 C300,68 360,24 420,40 C480,56 540,18 620,48 C700,78 780,36 860,46 C940,56 1000,44 1080,66 C1160,88 1200,30 1200,30 L1200,140 L0,140 Z;
+      M0,26 C80,74 140,30 220,58 C300,92 360,8 420,24 C480,40 540,22 620,62 C700,102 780,44 860,58 C940,70 1000,50 1080,86 C1160,110 1200,26 1200,26 L1200,140 L0,140 Z;
+      M0,34 C80,98 140,16 220,34 C300,52 360,28 420,52 C480,76 540,20 620,44 C700,68 780,30 860,40 C940,50 1000,42 1080,60 C1160,78 1200,34 1200,34 L1200,140 L0,140 Z
+      "/>
+  </path>
+</svg>
+<svg class="drips bottom" viewBox="0 0 1200 140" preserveAspectRatio="none" aria-hidden="true">
+  <use href=".drips path"/>
+</svg>
+
+<div class="orbs" aria-hidden="true"><div class="orb p1"></div><div class="orb p2"></div></div>
+
+<div class="stage">
+  <div class="card" id="card">
+    <div class="hero">
       <img src="edibles-hero.jpg" alt="$Edibles hero">
       <div class="gloss"></div>
-
-      <!-- dripping gradient -->
-      <svg class="drip" viewBox="0 0 1200 110" preserveAspectRatio="none" aria-hidden="true">
-        <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#ff6ea6"/><stop offset="1" stop-color="#ff93c4"/></linearGradient></defs>
-        <path id="dripPath" d="M0,20 C80,60 140,10 220,28 C300,46 360,22 420,30 C480,38 540,14 620,36 C700,58 780,26 860,34 C940,42 1000,36 1080,50 C1160,66 1200,22 1200,22 L1200,110 L0,110 Z" fill="url(#g)" opacity="0.98">
-          <animate attributeName="d" dur="5.6s" repeatCount="indefinite"
-            values="
-            M0,20 C80,60 140,10 220,28 C300,46 360,22 420,30 C480,38 540,14 620,36 C700,58 780,26 860,34 C940,42 1000,36 1080,50 C1160,66 1200,22 1200,22 L1200,110 L0,110 Z;
-            M0,18 C80,52 140,20 220,44 C300,72 360,6 420,20 C480,32 540,18 620,54 C700,84 780,34 860,44 C940,54 1000,44 1080,68 C1160,86 1200,18 1200,18 L1200,110 L0,110 Z;
-            M0,22 C80,66 140,8 220,22 C300,38 360,24 420,40 C480,56 540,16 620,36 C700,52 780,20 860,28 C940,36 1000,32 1080,46 C1160,60 1200,22 1200,22 L1200,110 L0,110 Z
-            " />
-        </path>
-      </svg>
-
-      <!-- floating candies -->
+      <!-- emoji candies floating on top -->
       <div class="candy" style="left:12px; top:12px; --dur:7s">🍬</div>
       <div class="candy" style="right:14px; top:20px; --dur:6.2s">🍭</div>
       <div class="candy" style="left:20px; bottom:18px; --dur:7.6s">🍫</div>
       <div class="candy" style="right:22px; bottom:12px; --dur:6.4s">🍡</div>
     </div>
-
-    <div class="meta" style="margin-top:16px">
-      <div class="text">Tasting in progress…</div>
-      <div class="bar" aria-label="Loading progress"><i id="barFill"></i></div>
-      <button class="skip" id="skipBtn" title="Skip intro (Enter)">Skip</button>
+    <div class="meta">
+      <div class="title">Tasting in progress…</div>
+      <div class="bar" aria-label="Loading progress"><i id="fill"></i></div>
+      <button class="skip" id="skip" title="Skip intro (Enter)">Skip</button>
     </div>
-    <div class="hint">Tip: Click Skip or press <strong>Enter</strong> to jump in.</div>
+    <div class="hint">Press <strong>Enter</strong> or click Skip to jump in.</div>
   </div>
 </div>
 
@@ -142,56 +123,41 @@
 </noscript>
 
 <script>
-/* =======================
+/* ========================
    CONFIG
-======================= */
-const TARGET_PAGE = 'app.html';     // where to go after the splash
-const DURATION_MS = 3000;           // how long to show the splash
-const ALLOW_SKIP_PARAM = 'skip';    // ?skip to bypass splash
+======================== */
+const TARGET_PAGE = 'app.html';    // main site
+const DURATION_MS = 3000;          // splash length
+const BYPASS_PARAM = 'skip';       // ?skip to bypass
 
-/* =======================
-   Progress + Redirect
-======================= */
-const fill = document.getElementById('barFill');
-const skipBtn = document.getElementById('skipBtn');
+/* ========================
+   Background particles (match app)
+======================== */
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let W,H, DPR = Math.min(2, window.devicePixelRatio || 1);
+function resize(){ W = canvas.width = innerWidth * DPR; H = canvas.height = innerHeight * DPR; canvas.style.width = innerWidth+'px'; canvas.style.height = innerHeight+'px'; }
+resize(); addEventListener('resize', resize);
+const palette = ['#ffd1e8','#ffc1de','#ff9ac8','#ff6ea6','#ffc7ee'];
+function rand(a,b){return Math.random()*(b-a)+a}
+const MAX = 70; const parts = Array.from({length:MAX}, () => ({x:rand(0,W), y:rand(0,H), r:rand(6*DPR,14*DPR), vx:rand(-0.12,0.12)*DPR, vy:rand(-0.22,0.04)*DPR, c:palette[(Math.random()*palette.length)|0], a:rand(0.35,0.9)}));
+let mx=-9999,my=-9999; addEventListener('mousemove',e=>{mx=e.clientX*DPR; my=e.clientY*DPR}); addEventListener('mouseleave',()=>{mx=my=-9999});
+(function step(){ ctx.clearRect(0,0,W,H); for(const p of parts){ const dx=mx-p.x, dy=my-p.y, d=Math.hypot(dx,dy)||1; if(d<220*DPR){ p.vx+=dx/d*0.01; p.vy+=dy/d*0.01; } p.x+=p.vx; p.y+=p.vy; p.vx*=0.986; p.vy=p.vy*0.986+0.018; if(p.x<-40)p.x=W+40; if(p.x>W+40)p.x=-40; if(p.y>H+40){p.y=-20; p.vy*=0.2} const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*1.4); g.addColorStop(0,'rgba(255,255,255,'+Math.min(0.9,p.a)+')'); g.addColorStop(0.35,p.c+'cc'); g.addColorStop(1,'rgba(255,255,255,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p.x,p.y,p.r*1.6,0,Math.PI*2); ctx.fill(); } requestAnimationFrame(step); })();
 
-function hasParam(name){
-  return new URLSearchParams(location.search).has(name);
-}
-
+/* ========================
+   Progress + redirect
+======================== */
+const fill = document.getElementById('fill');
+const skip = document.getElementById('skip');
+function hasParam(name){ return new URLSearchParams(location.search).has(name); }
+function go(){ document.body.classList.add('fadeOut'); setTimeout(()=>{ location.href = TARGET_PAGE; }, 350); }
 let start = performance.now();
-function tick(now){
-  const t = Math.min(1, (now - start) / DURATION_MS);
-  fill.style.width = (t * 100).toFixed(1) + '%';
-  if (t < 1) requestAnimationFrame(tick);
-  else go();
-}
+function tick(t){ const k = Math.min(1, (t-start)/DURATION_MS); fill.style.width = (k*100).toFixed(1)+'%'; if(k<1) requestAnimationFrame(tick); else go(); }
+skip.addEventListener('click', go); window.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' ') go(); });
+if(hasParam(BYPASS_PARAM)) location.replace(TARGET_PAGE); else requestAnimationFrame(tick);
 
-function go(){
-  // Friendly fade before navigation
-  document.body.style.transition = 'opacity .35s ease';
-  document.body.style.opacity = '0';
-  setTimeout(()=> { location.href = TARGET_PAGE; }, 350);
-}
-
-/* Skip handlers */
-skipBtn.addEventListener('click', go);
-window.addEventListener('keydown', (e)=> {
-  if (e.key === 'Enter' || e.key === ' ') go();
-});
-
-/* Optional: Bypass splash if ?skip is present */
-if (hasParam(ALLOW_SKIP_PARAM)) {
-  location.replace(TARGET_PAGE);
-} else {
-  requestAnimationFrame(tick);
-}
-
-/* Preload main page lightly (improves perceived speed) */
-const link = document.createElement('link');
-link.rel = 'prefetch';
-link.href = TARGET_PAGE;
-document.head.appendChild(link);
+/* Prefetch app for snappy handoff */
+const link = document.createElement('link'); link.rel='prefetch'; link.href=TARGET_PAGE; document.head.appendChild(link);
 </script>
 </body>
 </html>
