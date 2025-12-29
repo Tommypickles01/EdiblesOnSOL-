@@ -177,6 +177,26 @@
   th,td{padding:7px 4px;border-bottom:1px dashed #ffffff18;text-align:left}
   th{font-weight:600;color:#f4d9ea}
 
+  /* chart embed */
+  .chart-wrap{
+    border-radius:14px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#ffffff08;
+  }
+  .chart-iframe{
+    width:100%;
+    height:620px;
+    border:0;
+    display:block;
+  }
+  @media (max-width:900px){
+    .chart-iframe{height:560px}
+  }
+  @media (max-width:600px){
+    .chart-iframe{height:520px}
+  }
+
   /* mini-game */
   .stage{
     height:380px;
@@ -269,6 +289,7 @@
     </div>
     <nav>
       <a href="#token">Token</a>
+      <a href="#chart">Chart</a>
       <a href="#game">Mini-game</a>
       <a href="#whitepaper">Whitepaper</a>
     </nav>
@@ -285,16 +306,17 @@
         <div class="cta">
           <button class="btn" id="enter">Enter the Candyverse</button>
           <button class="ghost" id="connect">Connect Wallet</button>
-          <a class="ghost" href="#token" id="buy">Buy (placeholder)</a>
+          <a class="ghost" href="#token" id="buy">Buy</a>
         </div>
+
+        <!-- NO PRICE DEMO: this card is now static -->
         <div class="price-card">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
             <div>
-              <div id="price" style="font-size:28px;font-weight:1000">$0.0000</div>
+              <div style="font-size:18px;font-weight:1000">Live data</div>
               <div style="margin-top:6px">
-                <span class="pill" id="chg">+0.00%</span>
                 <span class="pill">Supply: 1,000,000,000</span>
-                <span class="pill">Liquidity: Placeholder</span>
+                <span class="pill">See chart below</span>
               </div>
             </div>
             <div style="width:110px;height:64px;border-radius:10px;overflow:hidden;border:1px solid var(--line)">
@@ -302,6 +324,7 @@
             </div>
           </div>
         </div>
+
       </div>
       <div class="art" id="art">
         <img src="edibles-hero.jpg" alt="$Edibles art" id="heroImg">
@@ -336,10 +359,28 @@
           <a class="ghost" href="https://dielaughing.org" target="_blank" rel="noopener noreferrer">
             DieLaughing.org
           </a>
-          <a class="ghost" href="#" id="chart">Chart (placeholder)</a>
+          <a class="ghost"
+             href="https://dexscreener.com/solana/EJmHUPjoiLqSxFTfAhm5oJHA6qT4DwMfnJjuUV4XKXwd"
+             target="_blank"
+             rel="noopener noreferrer">Open Dexscreener</a>
           <a class="ghost" href="#whitepaper">Whitepaper</a>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- EMBEDDED CHART -->
+  <section id="chart">
+    <h2>Live Chart</h2>
+    <div class="chart-wrap">
+      <iframe
+        class="chart-iframe"
+        src="https://dexscreener.com/solana/EJmHUPjoiLqSxFTfAhm5oJHA6qT4DwMfnJjuUV4XKXwd"
+        title="Dexscreener chart for $EDIBLES"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
+      ></iframe>
     </div>
   </section>
 
@@ -445,22 +486,6 @@ addEventListener('pointermove',e=>{
     {duration:600,easing:'ease-out'}
   ).onfinish=()=>s.remove();
 });
-
-/* ===== Price demo ===== */
-let price=0.00077;
-const priceEl=document.getElementById('price');
-const chgEl=document.getElementById('chg');
-function tickPrice(){
-  const r=(Math.random()-0.49)*0.06;
-  price=Math.max(0.0000001, price*(1+r));
-  priceEl.textContent='$'+price.toFixed(6);
-  chgEl.textContent=(r>=0?'+':'')+(r*100).toFixed(2)+'%';
-  chgEl.style.background=r>=0
-    ? 'linear-gradient(90deg,#bfffe3,#b5f0d9)'
-    : 'linear-gradient(90deg,#ffd6e1,#ffc5d1)';
-}
-setInterval(tickPrice,2800);
-tickPrice();
 
 /* ===== Mini-game (auto-spawn candies) ===== */
 const stage=document.getElementById('stage');
@@ -570,12 +595,6 @@ document.getElementById('enter').addEventListener(
   'click',
   ()=> document.querySelector('#token').scrollIntoView({behavior:'smooth'})
 );
-['chart','buy'].forEach(id=>{
-  const el=document.getElementById(id);
-  if(el) el.addEventListener('click', e=>{
-    if(id==='chart'){ e.preventDefault(); alert('Replace with DexScreener chart link (placeholder).'); }
-  });
-});
 </script>
 </body>
 </html>
